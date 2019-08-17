@@ -1,6 +1,7 @@
 package com.gridwar.websocket;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 

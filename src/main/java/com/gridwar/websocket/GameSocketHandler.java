@@ -45,13 +45,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) {
-        final String user = webSocketSession.getId();
-//        if ((user == null) || (userService.userInfo(user) == null)) {
-//            LOGGER.warn("User requested websocket is not registred or not logged in. Openning websocket session is denied.");
-//            closeSessionSilently(webSocketSession, ACCESS_DENIED);
-//            return;
-//        }
-        remotePointService.registerUser(user, webSocketSession);
+        remotePointService.registerUser(webSocketSession.getId(), webSocketSession);
     }
 
     @Override
@@ -59,26 +53,21 @@ public class GameSocketHandler extends TextWebSocketHandler {
         if (!webSocketSession.isOpen()) {
             return;
         }
-        final String user = (String) webSocketSession.getAttributes().get("user");
-//        if (user == null || userService.userInfo(user) == null) {
-//            closeSessionSilently(webSocketSession, ACCESS_DENIED);
-//            return;
-//        }
-        handleMessage(user, message);
+        handleMessage(webSocketSession, message);
     }
 
     @SuppressWarnings("OverlyBroadCatchBlock")
-    private void handleMessage(String user, TextMessage text) {
+    private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
         final Message message;
         try {
-            message = objectMapper.readValue(text.getPayload(), Message.class);
+            message = objectMapper.readerFor(Message.class).readValue(text.getPayload());
         } catch (IOException ex) {
             LOGGER.error("wrong json format at game response", ex);
             return;
         }
         try {
             //noinspection ConstantConditions
-            messageHandlerContainer.handle(message, user);
+            messageHandlerContainer.handle(message, webSocketSession.getId());
         } catch (HandleException e) {
             LOGGER.error("Can't handle message of type " + message.getClass().getName() + " with content: " + text, e);
         }
