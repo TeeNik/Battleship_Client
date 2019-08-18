@@ -11,17 +11,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Service
 @RequiredArgsConstructor
-public class GameManagerIml implements GameManager {
+public class UserQueueServiceImpl implements UserQueueService {
 
     private final ConcurrentLinkedQueue<User> waitingUsers = new ConcurrentLinkedQueue<>();
 
     private final RemotePointService remotePointService;
 
-    private Thread thread;
+    private Thread serverTimeThread;
 
     @PostConstruct
-    void launchItBaby() {
-       new Thread(() -> {
+    void setServerTimeThread() {
+       serverTimeThread = new  Thread(() -> {
             while (true) {
                 waitingUsers
                         .parallelStream()
@@ -33,7 +33,8 @@ public class GameManagerIml implements GameManager {
                     break;
                 }
             }
-        }).start();
+        });
+       serverTimeThread.start();
     }
 
     @Override

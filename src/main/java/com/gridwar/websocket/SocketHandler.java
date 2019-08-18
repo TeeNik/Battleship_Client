@@ -16,8 +16,8 @@ import java.io.IOException;
 import static org.springframework.web.socket.CloseStatus.SERVER_ERROR;
 
 @Component
-public class GameSocketHandler extends TextWebSocketHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameSocketHandler.class);
+public class SocketHandler extends TextWebSocketHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocketHandler.class);
 
     private static final CloseStatus ACCESS_DENIED = new CloseStatus(4500, "Not logged in. Access denied");
 
@@ -28,9 +28,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
 
 
-    public GameSocketHandler(@NotNull MessageHandlerContainer messageHandlerContainer,
-                             @NotNull RemotePointService remotePointService,
-                             ObjectMapper objectMapper) {
+    public SocketHandler(@NotNull MessageHandlerContainer messageHandlerContainer,
+                         @NotNull RemotePointService remotePointService,
+                         ObjectMapper objectMapper) {
         this.messageHandlerContainer = messageHandlerContainer;
         this.remotePointService = remotePointService;
         this.objectMapper = objectMapper;
@@ -49,7 +49,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
         handleMessage(webSocketSession, message);
     }
 
-    @SuppressWarnings("OverlyBroadCatchBlock")
     private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
         final Message message;
         try {
@@ -82,7 +81,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
         remotePointService.removeUser(user);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private void closeSessionSilently(@NotNull WebSocketSession session, @Nullable CloseStatus closeStatus) {
         final CloseStatus status = closeStatus == null ? SERVER_ERROR : closeStatus;
         //noinspection OverlyBroadCatchBlock

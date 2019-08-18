@@ -1,6 +1,6 @@
 package com.gridwar.mechanics.messages.input.login;
 
-import com.gridwar.mechanics.GameManager;
+import com.gridwar.mechanics.UserQueueService;
 import com.gridwar.websocket.HandleException;
 import com.gridwar.websocket.MessageHandler;
 import com.gridwar.websocket.MessageHandlerContainer;
@@ -14,15 +14,15 @@ import javax.validation.constraints.NotNull;
 public class LoginHandler extends MessageHandler<Login> {
 
     @NotNull
-    private final GameManager gameManager;
+    private final UserQueueService userQueueService;
     @NotNull
     private final MessageHandlerContainer messageHandlerContainer;
     @NotNull
     private final RemotePointService remotePointService;
 
-    public LoginHandler(@NotNull GameManager gameManager, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull RemotePointService remotePointService) {
+    public LoginHandler(@NotNull UserQueueService userQueueService, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull RemotePointService remotePointService) {
         super(Login.class);
-        this.gameManager = gameManager;
+        this.userQueueService = userQueueService;
         this.messageHandlerContainer = messageHandlerContainer;
         this.remotePointService = remotePointService;
     }
