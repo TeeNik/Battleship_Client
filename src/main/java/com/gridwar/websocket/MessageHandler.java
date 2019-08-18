@@ -18,5 +18,5 @@ public abstract class MessageHandler <T extends Message> {
         }
     }
 
-    public abstract void handle(@NotNull T message, @NotNull String forUser) throws HandleException;
+    public abstract void handle(@NotNull T message, @NotNull String sessionId) throws HandleException;
 }

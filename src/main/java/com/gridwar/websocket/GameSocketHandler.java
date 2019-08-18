@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -19,12 +18,8 @@ import static org.springframework.web.socket.CloseStatus.SERVER_ERROR;
 @Component
 public class GameSocketHandler extends TextWebSocketHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameSocketHandler.class);
+
     private static final CloseStatus ACCESS_DENIED = new CloseStatus(4500, "Not logged in. Access denied");
-
-//    @Autowired
-//    private GameSessionService game;
-
-//    private final  @NotNull UserService userService;
 
     private final @NotNull MessageHandlerContainer messageHandlerContainer;
 
@@ -34,11 +29,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
 
     public GameSocketHandler(@NotNull MessageHandlerContainer messageHandlerContainer,
-//                             @NotNull UserService userService,
                              @NotNull RemotePointService remotePointService,
                              ObjectMapper objectMapper) {
         this.messageHandlerContainer = messageHandlerContainer;
-//        this.userService = userService;
         this.remotePointService = remotePointService;
         this.objectMapper = objectMapper;
     }
@@ -49,7 +42,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) {
+    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws IOException {
         if (!webSocketSession.isOpen()) {
             return;
         }
@@ -66,7 +59,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
             return;
         }
         try {
-            //noinspection ConstantConditions
             messageHandlerContainer.handle(message, webSocketSession.getId());
         } catch (HandleException e) {
             LOGGER.error("Can't handle message of type " + message.getClass().getName() + " with content: " + text, e);

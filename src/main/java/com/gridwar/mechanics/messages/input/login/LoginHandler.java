@@ -1,6 +1,6 @@
 package com.gridwar.mechanics.messages.input.login;
 
-import com.gridwar.mechanics.GameMechanics;
+import com.gridwar.mechanics.GameManager;
 import com.gridwar.websocket.HandleException;
 import com.gridwar.websocket.MessageHandler;
 import com.gridwar.websocket.MessageHandlerContainer;
@@ -14,15 +14,15 @@ import javax.validation.constraints.NotNull;
 public class LoginHandler extends MessageHandler<Login> {
 
     @NotNull
-    private final GameMechanics gameMechanics;
+    private final GameManager gameManager;
     @NotNull
     private final MessageHandlerContainer messageHandlerContainer;
     @NotNull
     private final RemotePointService remotePointService;
 
-    public LoginHandler(@NotNull GameMechanics gameMechanics, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull RemotePointService remotePointService) {
+    public LoginHandler(@NotNull GameManager gameManager, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull RemotePointService remotePointService) {
         super(Login.class);
-        this.gameMechanics = gameMechanics;
+        this.gameManager = gameManager;
         this.messageHandlerContainer = messageHandlerContainer;
         this.remotePointService = remotePointService;
     }
@@ -34,7 +34,7 @@ public class LoginHandler extends MessageHandler<Login> {
 
     @Override
     public void handle(@NotNull Login message, @NotNull String sessionId) throws HandleException {
-        if (remotePointService.checkUserWasLogged(message.getIMEI())) {
+        if (remotePointService.checkUserWasLogged(sessionId)) {
             //TODO:: реализовать восстановление сессии
             return;
         } else {
