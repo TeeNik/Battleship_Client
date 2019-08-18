@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class GameMessageHandlerContainer implements MessageHandlerContainer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameMessageHandlerContainer.class);
+public class MessageHandlerContainerIml implements MessageHandlerContainer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageHandlerContainerIml.class);
     private final Map<Class<?>, MessageHandler<?>> handlerMap = new HashMap<>();
 
     @Override

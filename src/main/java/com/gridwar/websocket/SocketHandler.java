@@ -2,8 +2,10 @@ package com.gridwar.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -23,26 +25,26 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private final @NotNull MessageHandlerContainer messageHandlerContainer;
 
-    private final @NotNull RemotePointService remotePointService;
+    private final @NotNull SocketUserService socketUserService;
 
     private final ObjectMapper objectMapper;
 
 
     public SocketHandler(@NotNull MessageHandlerContainer messageHandlerContainer,
-                         @NotNull RemotePointService remotePointService,
+                         @NotNull SocketUserService socketUserService,
                          ObjectMapper objectMapper) {
         this.messageHandlerContainer = messageHandlerContainer;
-        this.remotePointService = remotePointService;
+        this.socketUserService = socketUserService;
         this.objectMapper = objectMapper;
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) {
-        remotePointService.registerUser(webSocketSession.getId(), webSocketSession);
+        socketUserService.registerUser(webSocketSession.getId(), webSocketSession);
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) throws IOException {
+    protected void handleTextMessage(WebSocketSession webSocketSession, TextMessage message) {
         if (!webSocketSession.isOpen()) {
             return;
         }
@@ -52,15 +54,18 @@ public class SocketHandler extends TextWebSocketHandler {
     private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
         final Message message;
         try {
+            JSONObject jsonObject = new JSONObject(text.getPayload());
+            jsonObject.getString("class");
             message = objectMapper.readerFor(Message.class).readValue(text.getPayload());
         } catch (IOException ex) {
             LOGGER.error("wrong json format at game response", ex);
             return;
         }
         try {
-            messageHandlerContainer.handle(message, webSocketSession.getId());
+            messageHandlerContainer.handle(message, webSocketSession.getId()); //TODO:: возвращать ответ
         } catch (HandleException e) {
             LOGGER.error("Can't handle message of type " + message.getClass().getName() + " with content: " + text, e);
+            //TODO:: возвращать Fault ответ
         }
     }
 
@@ -78,7 +83,7 @@ public class SocketHandler extends TextWebSocketHandler {
             LOGGER.warn("User disconnected but his session was not found (closeStatus=" + closeStatus + ')');
             return;
         }
-        remotePointService.removeUser(user);
+        socketUserService.removeUser(user);
     }
 
     private void closeSessionSilently(@NotNull WebSocketSession session, @Nullable CloseStatus closeStatus) {

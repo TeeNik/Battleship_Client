@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class RemotePointService {
+public class SocketUserService {
 
     private final Map<String, WebSocketSession> sessionID_Websocket = new ConcurrentHashMap<>();
 
@@ -23,7 +23,7 @@ public class RemotePointService {
 
     private final ObjectMapper objectMapper;
 
-    public RemotePointService(ObjectMapper objectMapper) {
+    public SocketUserService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -32,7 +32,8 @@ public class RemotePointService {
     }
 
     public void loginUser(@NotNull String sessionId, @NotNull String IMEI) {
-        User user = new User(IMEI, sessionID_Websocket.get(sessionId));
+        WebSocketSession socketSession = sessionID_Websocket.get(sessionId);
+        User user = new User(IMEI, socketSession);
         sessionID_User.put(sessionId, user);
     }
 

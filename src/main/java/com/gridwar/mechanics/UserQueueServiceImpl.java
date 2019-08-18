@@ -1,7 +1,7 @@
 package com.gridwar.mechanics;
 
 import com.gridwar.model.User;
-import com.gridwar.websocket.RemotePointService;
+import com.gridwar.websocket.SocketUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class UserQueueServiceImpl implements UserQueueService {
 
     private final ConcurrentLinkedQueue<User> waitingUsers = new ConcurrentLinkedQueue<>();
 
-    private final RemotePointService remotePointService;
+    private final SocketUserService socketUserService;
 
     private Thread serverTimeThread;
 
@@ -25,7 +25,7 @@ public class UserQueueServiceImpl implements UserQueueService {
             while (true) {
                 waitingUsers
                         .parallelStream()
-                        .forEach(remotePointService::sendServerTime);
+                        .forEach(socketUserService::sendServerTime);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -39,7 +39,7 @@ public class UserQueueServiceImpl implements UserQueueService {
 
     @Override
     public void addUserToQueue(@NotNull String sessionId) {
-        User user = remotePointService.getUserBySessionId(sessionId);
+        User user = socketUserService.getUserBySessionId(sessionId);
         waitingUsers.add(user);
     }
 
