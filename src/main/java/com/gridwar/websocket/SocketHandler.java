@@ -52,19 +52,12 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
-        final Message message;
+        JSONObject jsonObject = new JSONObject(text.getPayload());
+        String header = jsonObject.getString("header");
         try {
-            JSONObject jsonObject = new JSONObject(text.getPayload());
-            jsonObject.getString("class");
-            message = objectMapper.readerFor(Message.class).readValue(text.getPayload());
-        } catch (IOException ex) {
-            LOGGER.error("wrong json format at game response", ex);
-            return;
-        }
-        try {
-            messageHandlerContainer.handle(message, webSocketSession.getId()); //TODO:: возвращать ответ
+            messageHandlerContainer.handle(text, header, webSocketSession.getId()); //TODO:: возвращать ответ
         } catch (HandleException e) {
-            LOGGER.error("Can't handle message of type " + message.getClass().getName() + " with content: " + text, e);
+            LOGGER.error("Can't handle message of type " + header + " with content: " + text, e);
             //TODO:: возвращать Fault ответ
         }
     }

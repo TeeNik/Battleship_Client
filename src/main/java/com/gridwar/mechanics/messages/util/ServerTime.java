@@ -13,6 +13,9 @@ public class ServerTime extends Message {
     @Getter @Setter
     private LocalDateTime localDateTime;
 
+    @Getter
+    private final String HEADER = "server_time";
+
     @JsonCreator
     public ServerTime(@JsonProperty("localDateTime") LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;

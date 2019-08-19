@@ -3,6 +3,7 @@ package com.gridwar.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
 
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -11,21 +12,21 @@ import java.util.Map;
 @Service
 public class MessageHandlerContainerIml implements MessageHandlerContainer {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageHandlerContainerIml.class);
-    private final Map<Class<?>, MessageHandler<?>> handlerMap = new HashMap<>();
+    private final Map<String, MessageHandler<?>> handlerMap = new HashMap<>();
 
     @Override
-    public void handle(@NotNull Message message, @NotNull String sessionId) throws HandleException {
+    public void handle(@NotNull TextMessage textMessage, @NotNull String header, @NotNull String sessionId) throws HandleException {
 
-        final MessageHandler<?> messageHandler = handlerMap.get(message.getClass());
+        final MessageHandler<?> messageHandler = handlerMap.get(header);
         if (messageHandler == null) {
-            throw new HandleException("no handler for message of " + message.getClass().getName() + " type");
+            throw new HandleException("no handler for message of " + header + " type");
         }
-        messageHandler.handleMessage(message, sessionId);
-        LOGGER.trace("message handled: type =[" + message.getClass().getName() + ']');
+        messageHandler.handleMessage(textMessage, sessionId);
+        LOGGER.trace("message handled: type =[" + header + ']');
     }
 
     @Override
-    public <T extends Message> void registerHandler(@NotNull Class<T> clazz, MessageHandler<T> handler) {
-        handlerMap.put(clazz, handler);
+    public <T extends Message> void registerHandler(@NotNull String header, MessageHandler<T> handler) {
+        handlerMap.put(header, handler);
     }
 }
