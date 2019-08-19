@@ -1,4 +1,4 @@
-package com.gridwar.mechanics.messages.output;
+package com.gridwar.mechanics.messages.util;
 
 import com.gridwar.websocket.Message;
 
