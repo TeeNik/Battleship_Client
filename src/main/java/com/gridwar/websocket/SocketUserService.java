@@ -90,8 +90,4 @@ public class SocketUserService {
 //            throw new IOException("Unnable to send message", e);
         }
     }
-
-
-
-
 }

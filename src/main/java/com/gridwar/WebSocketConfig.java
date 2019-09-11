@@ -29,7 +29,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(@NotNull WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/multiplayer/rand")
+        registry.addHandler(webSocketHandler, "/multiplayer/rand") //TODO не терять ws://localhost:8080/multiplayer/rand
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
                 .setAllowedOrigins("*");
     }
