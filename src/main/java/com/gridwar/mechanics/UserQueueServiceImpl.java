@@ -43,8 +43,7 @@ public class UserQueueServiceImpl implements UserQueueService {
               if (waitingUsers.size() >= 2) {
                   User user1 = waitingUsers.poll();
                   User user2 = waitingUsers.poll();
-                  GameSession gameSession = new GameSession();
-                  gameSession.setMessageService(socketUserService);
+                  GameSession gameSession = new GameSession(socketUserService);
                   gameSession.setUser1(user1);
                   gameSession.setUser2(user2);
                   activeGames.put(user1, gameSession);
