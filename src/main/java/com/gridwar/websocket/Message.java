@@ -20,5 +20,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Message {
     @Getter @Setter
-    private String result;
+    private Integer result;
 }

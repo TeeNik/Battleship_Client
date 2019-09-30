@@ -1,6 +1,10 @@
 package com.gridwar.game.message;
 
-public class GameMessage<T extends GameMessageParams> {
+import com.gridwar.websocket.Message;
+import lombok.Data;
+
+@Data
+public class GameMessage extends Message {
     private String cmd;
-    private T params;
+    private Object params;
 }

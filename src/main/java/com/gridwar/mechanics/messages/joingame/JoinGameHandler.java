@@ -38,7 +38,7 @@ public class JoinGameHandler extends MessageHandler<JoinGameInput> {
     public void handle(@NotNull JoinGameInput message, @NotNull String sessionId) throws HandleException {
         if (socketUserService.checkUserWasLogged(sessionId)) {
             userQueueService.addUserToQueue(sessionId);
-            socketUserService.sendMessageToUser(sessionId, new Message());
+            socketUserService.sendMessageToUserBySessionId(sessionId, new Message());
         } else {
             throw new HandleException("Forbidden operation");
         }

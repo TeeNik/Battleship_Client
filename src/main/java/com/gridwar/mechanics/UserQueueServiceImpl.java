@@ -61,4 +61,9 @@ public class UserQueueServiceImpl implements UserQueueService {
         waitingUsers.add(user);
     }
 
+    @Override
+    public GameSession getGamseSessionByUser(User user) {
+        return activeGames.get(user);
+    }
+
 }

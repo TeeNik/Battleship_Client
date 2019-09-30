@@ -2,7 +2,6 @@ package com.gridwar.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.web.socket.TextMessage;
 
 import javax.validation.constraints.NotNull;

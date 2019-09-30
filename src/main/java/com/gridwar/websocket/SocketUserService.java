@@ -74,7 +74,7 @@ public class SocketUserService {
         }
     }
 
-    public void sendMessageToUser(@NotNull String sessionId, @NotNull Message message)  {
+    public void sendMessageToUserBySessionId(@NotNull String sessionId, @NotNull Message message)  {
         final WebSocketSession webSocketSession = sessionID_Websocket.get(sessionId);
         if (webSocketSession == null) {
 //            throw new IOException("no game websocket for user " + user);
@@ -87,7 +87,15 @@ public class SocketUserService {
             //noinspection ConstantConditions
             webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
         } catch (IOException e) {
-//            throw new IOException("Unnable to send message", e);
+//            throw new IOException("Unnable to send message", e); //TODO продумать поведение
+        }
+    }
+
+    public void sendMessageToUserBySession(WebSocketSession session, Message message) {
+        try {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        } catch (IOException e) {
+//            e.printStackTrace(); //TODO продумать поведение
         }
     }
 }
