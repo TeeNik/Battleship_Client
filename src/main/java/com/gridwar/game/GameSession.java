@@ -18,7 +18,7 @@ public class GameSession {
 
     private Map<String, BiConsumer<User, GameMessage>> gameCommands = new HashMap<>();
     private Map<String, GameMessage> userTurnMessages = new ConcurrentHashMap<>();
-    private final Message okMessage = new Message(0);
+    //private final Message okMessage = new Message(0);
 
     public GameSession(SocketUserService messageService) {
         this.messageService = messageService;

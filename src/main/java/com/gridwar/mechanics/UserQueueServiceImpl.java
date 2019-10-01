@@ -18,6 +18,7 @@ public class UserQueueServiceImpl implements UserQueueService {
     private final ConcurrentLinkedQueue<User> waitingUsers = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<User, GameSession> activeGames = new ConcurrentHashMap<>();
     private final SocketUserService socketUserService;
+    private final int SyncDelay = 10000;
     private Thread serverTimeThread;
     private Thread gameSessionsThread;
 
@@ -29,7 +30,7 @@ public class UserQueueServiceImpl implements UserQueueService {
                         .parallelStream()
                         .forEach(socketUserService::sendServerTime);
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(SyncDelay);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     break;

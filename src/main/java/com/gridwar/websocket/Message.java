@@ -17,8 +17,14 @@ import lombok.Setter;
 //        @JsonSubTypes.Type(ServerTime.class)
 //})
 @AllArgsConstructor
-@NoArgsConstructor
 public class Message {
     @Getter @Setter
     private Integer result;
+
+    @Getter @Setter
+    private String cmd;
+
+    public Message(){
+        result = 0;
+    }
 }

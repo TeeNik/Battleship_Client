@@ -2,10 +2,7 @@ package com.gridwar.mechanics.messages.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gridwar.mechanics.UserQueueService;
-import com.gridwar.websocket.HandleException;
-import com.gridwar.websocket.MessageHandler;
-import com.gridwar.websocket.MessageHandlerContainer;
-import com.gridwar.websocket.SocketUserService;
+import com.gridwar.websocket.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -44,8 +41,8 @@ public class LoginHandler extends MessageHandler<LoginInput> {
             //TODO:: реализовать восстановление сессии
             return;
         } else {
-            socketUserService.loginUser(sessionId, message.getIMEI());
-
+            socketUserService.loginUser(sessionId, message.getDeviceId());
+            socketUserService.sendMessageToUserBySessionId(sessionId, new Message(0, HEADER));
         }
     }
 }

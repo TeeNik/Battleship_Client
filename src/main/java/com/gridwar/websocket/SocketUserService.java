@@ -50,13 +50,11 @@ public class SocketUserService {
     }
 
     public void sendServerTime(User user) {
-        try {
-            WebSocketSession session = user.getSession();
-            if (session.isOpen()) {
-                session.sendMessage(new TextMessage(LocalDateTime.now().toString()));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        WebSocketSession session = user.getSession();
+        if (session.isOpen()) {
+            //TODO
+            sendMessageToUserBySessionId(session.getId(), new Message());
+            //session.sendMessage(new TextMessage(LocalDateTime.now().toString()));
         }
     }
 

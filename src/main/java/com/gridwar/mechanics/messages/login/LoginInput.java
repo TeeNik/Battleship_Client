@@ -10,9 +10,9 @@ public class LoginInput extends Message {
 
     @JsonCreator
     public LoginInput(@JsonProperty("IMEI") String IMEI) {
-        this.IMEI = IMEI;
+        this.deviceId = IMEI;
     }
 
     @Getter @Setter
-    private String IMEI;
+    private String deviceId;
 }

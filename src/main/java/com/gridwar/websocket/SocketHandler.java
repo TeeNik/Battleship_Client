@@ -53,7 +53,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
     private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
         JSONObject jsonObject = new JSONObject(text.getPayload());
-        String header = jsonObject.getString("header");
+        String header = jsonObject.getString("cmd");
         try {
             messageHandlerContainer.handle(text, header, webSocketSession.getId()); //TODO:: возвращать ответ
         } catch (HandleException e) {
