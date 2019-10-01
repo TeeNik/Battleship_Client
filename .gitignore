@@ -13,8 +13,8 @@ target/
 .springBeans
 .sts4-cache
 
-.lock
-.bin
+*.lock
+*.bin
 
 ### IntelliJ IDEA ###
 .idea
