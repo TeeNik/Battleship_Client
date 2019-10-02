@@ -9,7 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
 @AllArgsConstructor
 public class User {
     @NotNull
-    @Getter @Setter private String IMEI;
+    @Getter @Setter private String deviceId;
     @NotNull
     @Getter @Setter private WebSocketSession session;
 }

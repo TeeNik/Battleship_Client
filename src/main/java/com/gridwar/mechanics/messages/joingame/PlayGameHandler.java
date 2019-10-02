@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
 @Component
-public class JoinGameHandler extends MessageHandler<JoinGameInput> {
+public class PlayGameHandler extends MessageHandler<PlayGameInput> {
     @NotNull
     private final UserQueueService userQueueService;
     @NotNull
@@ -19,10 +19,10 @@ public class JoinGameHandler extends MessageHandler<JoinGameInput> {
     @NotNull
     private final ObjectMapper mapper;
 
-    private final String HEADER = "joingame";
+    private final String HEADER = "playGame";
 
-    public JoinGameHandler(@NotNull UserQueueService userQueueService, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull SocketUserService socketUserService, @NotNull ObjectMapper mapper) {
-        super(JoinGameInput.class, mapper);
+    public PlayGameHandler(@NotNull UserQueueService userQueueService, @NotNull MessageHandlerContainer messageHandlerContainer, @NotNull SocketUserService socketUserService, @NotNull ObjectMapper mapper) {
+        super(PlayGameInput.class, mapper);
         this.userQueueService = userQueueService;
         this.messageHandlerContainer = messageHandlerContainer;
         this.socketUserService = socketUserService;
@@ -35,10 +35,10 @@ public class JoinGameHandler extends MessageHandler<JoinGameInput> {
     }
 
     @Override
-    public void handle(@NotNull JoinGameInput message, @NotNull String sessionId) throws HandleException {
+    public void handle(@NotNull PlayGameInput message, @NotNull String sessionId) throws HandleException {
         if (socketUserService.checkUserWasLogged(sessionId)) {
             userQueueService.addUserToQueue(sessionId);
-            socketUserService.sendMessageToUserBySessionId(sessionId, new Message());
+            socketUserService.sendMessageToUserBySessionId(sessionId, new ResponseMessage(HEADER, 0));
         } else {
             throw new HandleException("Forbidden operation");
         }

@@ -42,7 +42,7 @@ public class LoginHandler extends MessageHandler<LoginInput> {
             return;
         } else {
             socketUserService.loginUser(sessionId, message.getDeviceId());
-            socketUserService.sendMessageToUserBySessionId(sessionId, new Message(0, HEADER));
+            socketUserService.sendMessageToUserBySessionId(sessionId, new ResponseMessage(HEADER, 0));
         }
     }
 }

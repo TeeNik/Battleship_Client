@@ -10,6 +10,6 @@ public interface UserQueueService {
 
     void addUserToQueue(@NotNull String sessionId);
 
-    GameSession getGamseSessionByUser(User user);
+    GameSession getGameSessionByUser(User user);
 
 }

@@ -1,10 +1,5 @@
 package com.gridwar.websocket;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.gridwar.mechanics.messages.joingame.JoinGameInput;
-import com.gridwar.mechanics.messages.login.LoginInput;
-import com.gridwar.mechanics.messages.util.ServerTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +12,10 @@ import lombok.Setter;
 //        @JsonSubTypes.Type(ServerTime.class)
 //})
 @AllArgsConstructor
+@NoArgsConstructor
 public class Message {
-    @Getter @Setter
-    private Integer result;
 
     @Getter @Setter
     private String cmd;
 
-    public Message(){
-        result = 0;
-    }
 }
