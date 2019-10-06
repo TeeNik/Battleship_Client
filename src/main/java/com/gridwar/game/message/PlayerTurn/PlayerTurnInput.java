@@ -1,4 +1,4 @@
-package com.gridwar.game.message;
+package com.gridwar.game.message.PlayerTurn;
 
 import com.gridwar.websocket.Message;
 import lombok.AllArgsConstructor;

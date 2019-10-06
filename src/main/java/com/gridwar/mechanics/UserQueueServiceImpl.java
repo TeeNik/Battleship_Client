@@ -1,6 +1,7 @@
 package com.gridwar.mechanics;
 
 import com.gridwar.game.GameSession;
+import com.gridwar.game.message.StartGame.StartGameOutput;
 import com.gridwar.model.User;
 import com.gridwar.websocket.Message;
 import com.gridwar.websocket.ResponseMessage;
@@ -51,8 +52,8 @@ public class UserQueueServiceImpl implements UserQueueService {
                   gameSession.setUser2(user2);
                   activeGames.put(user1, gameSession);
                   activeGames.put(user2, gameSession);
-                  socketUserService.sendMessageToUserBySessionId(user1.getSession().getId(), new ResponseMessage("startGame", 0));
-                  socketUserService.sendMessageToUserBySessionId(user2.getSession().getId(), new ResponseMessage("startGame", 0));
+                  socketUserService.sendMessageToUserBySessionId(user1.getSession().getId(), new StartGameOutput(StartGameOutput.PlayerType.Player1));
+                  socketUserService.sendMessageToUserBySessionId(user2.getSession().getId(), new StartGameOutput(StartGameOutput.PlayerType.Player2));
               }
           }
        });
