@@ -29,10 +29,10 @@ public class GameSession {
     public void playerTurn(User user, PlayerTurnInput input) {
         userTurnMessages.add(input.getTurnData());
         if (userTurnMessages.size() == 2) {
-            //TODO replace with output class
             NextTurnOutput message = new NextTurnOutput(userTurnMessages);
             messageService.sendMessageToUserBySession(user1.getSession(), message);
             messageService.sendMessageToUserBySession(user2.getSession(), message);
+            userTurnMessages.clear();
         } else {
             messageService.sendMessageToUserBySession(user.getSession(), new ResponseMessage("playerTurn", 0));
         }
