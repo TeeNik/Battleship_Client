@@ -2,6 +2,8 @@ package com.gridwar.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gridwar.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -17,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class SocketUserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SocketHandler.class);
+
     private final Map<String, WebSocketSession> sessionID_Websocket = new ConcurrentHashMap<>();
-
     private final Map<String, User> sessionID_User = new ConcurrentHashMap<>();
-
     private final ObjectMapper objectMapper;
 
     public SocketUserService(ObjectMapper objectMapper) {
@@ -83,7 +85,9 @@ public class SocketUserService {
         //noinspection OverlyBroadCatchBlock
         try {
             //noinspection ConstantConditions
-            webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            TextMessage toSend = new TextMessage(objectMapper.writeValueAsString(message));
+            webSocketSession.sendMessage(toSend);
+            LOGGER.info(String.format("Sent Message: %s", toSend.getPayload()));
         } catch (IOException e) {
 //            throw new IOException("Unnable to send message", e); //TODO продумать поведение
         }

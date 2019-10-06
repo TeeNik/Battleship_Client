@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.AbstractWebSocketMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,11 +15,13 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.springframework.web.socket.CloseStatus.SERVER_ERROR;
 
 @Component
 public class SocketHandler extends TextWebSocketHandler {
+    public static final String LOGGER_TEMPLATE = "Handling message: %s";
     private static final Logger LOGGER = LoggerFactory.getLogger(SocketHandler.class);
 
     private static final CloseStatus ACCESS_DENIED = new CloseStatus(4500, "Not logged in. Access denied");
@@ -52,12 +55,20 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     private void handleMessage(WebSocketSession webSocketSession, TextMessage text) {
-        JSONObject jsonObject = new JSONObject(text.getPayload());
+        JSONObject jsonObject = Optional.of(text)
+                .map(AbstractWebSocketMessage::getPayload)
+                .map(JSONObject::new)
+                .orElse(null);
+        if (jsonObject == null) {
+            LOGGER.error("Can't handle message with content: " + text.getPayload());
+            return;
+        }
         String header = jsonObject.getString("cmd");
         try {
             messageHandlerContainer.handle(text, header, webSocketSession.getId()); //TODO:: возвращать ответ
+            LOGGER.info(String.format(LOGGER_TEMPLATE, text.getPayload()));
         } catch (HandleException e) {
-            LOGGER.error("Can't handle message of type " + header + " with content: " + text, e);
+            LOGGER.error("Can't handle message of type " + header + " with content: " + text.getPayload(), e);
             //TODO:: возвращать Fault ответ
         }
     }
