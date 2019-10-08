@@ -5,8 +5,11 @@ import com.gridwar.game.message.StartGame.StartGameOutput;
 import com.gridwar.model.User;
 import com.gridwar.websocket.Message;
 import com.gridwar.websocket.ResponseMessage;
+import com.gridwar.websocket.SocketHandler;
 import com.gridwar.websocket.SocketUserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +20,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Service
 @RequiredArgsConstructor
 public class UserQueueServiceImpl implements UserQueueService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserQueueServiceImpl.class);
 
     private final ConcurrentLinkedQueue<User> waitingUsers = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<User, GameSession> activeGames = new ConcurrentHashMap<>();
@@ -54,6 +59,7 @@ public class UserQueueServiceImpl implements UserQueueService {
                   activeGames.put(user2, gameSession);
                   socketUserService.sendMessageToUserBySessionId(user1.getSession().getId(), new StartGameOutput(StartGameOutput.PlayerType.Player1));
                   socketUserService.sendMessageToUserBySessionId(user2.getSession().getId(), new StartGameOutput(StartGameOutput.PlayerType.Player2));
+                  LOGGER.info(String.format("Started game session for: %s and %s", user1.getDeviceId(), user2.getDeviceId()));
               }
           }
        });
@@ -64,6 +70,7 @@ public class UserQueueServiceImpl implements UserQueueService {
     public void addUserToQueue(@NotNull String sessionId) {
         User user = socketUserService.getUserBySessionId(sessionId);
         waitingUsers.add(user);
+        LOGGER.info(String.format("Added user %s to expecting queue", user.getDeviceId()));
     }
 
     @Override
