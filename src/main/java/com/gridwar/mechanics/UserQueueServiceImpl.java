@@ -71,6 +71,7 @@ public class UserQueueServiceImpl implements UserQueueService {
         User user = socketUserService.getUserBySessionId(sessionId);
         waitingUsers.add(user);
         LOGGER.info(String.format("Added user %s to expecting queue", user.getDeviceId()));
+        LOGGER.info(String.format("Number of users in queue: ", user.getDeviceId()));
     }
 
     @Override
